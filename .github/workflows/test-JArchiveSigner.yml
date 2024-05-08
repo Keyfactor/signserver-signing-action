@@ -1,0 +1,59 @@
+name: test-JArchiveSigner
+
+on:
+ workflow_dispatch:
+ #push:
+   #branches: [master]
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+       
+    - name: Start SignServer Container
+      run: sudo docker run -d -it --rm --name signserver -p 80:8080 -p 443:8443 -e LOG_LEVEL_APP=DEBUG -v /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/ManagementCA.cacert.crt:/mnt/external/secrets/tls/cas/ManagementCA.crt -h localhost keyfactor/signserver-ce:6.2.0  
+          
+    - name: Wait for Container to deploy
+      run: sleep 180s
+      shell: bash
+
+    - name: Add CryptoTokenP12
+      run: |
+          curl --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/TestCN.p12:foo123 \
+          -d '{"properties": {
+                "KEYSTOREPATH": "/opt/signserver/res/test/dss10/dss10_keystore.p12",
+                "IMPLEMENTATION_CLASS": "org.signserver.server.signers.CryptoWorker",
+                "KEYSTORETYPE": "PKCS12",
+                "TYPE": "CRYPTO_WORKER",
+                "CRYPTOTOKEN_IMPLEMENTATION_CLASS": "org.signserver.server.cryptotokens.KeystoreCryptoToken",
+                "KEYSTOREPASSWORD": "foo123",
+                "NAME": "CryptoTokenP12" }}' \
+          -H "Content-Type: application/json" \
+          -H "X-Keyfactor-Requested-With: 1" https://localhost:443/signserver/rest/v1/workers \
+          --insecure 
+             
+    - name: Add JArchiveSigner
+      run: |
+          curl --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/TestCN.p12:foo123 \-d '{"properties": {
+                "DEFAULTKEY": "signer00003",
+                "NAME": "JArchiveSigner",
+                "CRYPTOTOKEN": "CryptoTokenP12",
+                "AUTHTYPE": "NOAUTH",
+                "IMPLEMENTATION_CLASS": "org.signserver.module.jarchive.signer.JArchiveSigner",
+                "TYPE": "PROCESSABLE",
+                "DISABLEKEYUSAGECOUNTER": "true" }}' \
+          -H "Content-Type: application/json"  \
+          -H "X-Keyfactor-Requested-With: 1" \
+          https://localhost:443/signserver/rest/v1/workers \
+          --insecure
+      
+    - name: Sign Jar
+      id: sign-file
+      uses: ./
+      with:
+        endpoint: http://localhost:80/signserver
+        file-path: /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/HelloJar.jar
+        worker-name: JArchiveSigner 
+        worker-type: JArchiveSigner
