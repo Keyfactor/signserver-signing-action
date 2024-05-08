@@ -1,0 +1,65 @@
+name: test-PDFSigner
+
+on:
+ workflow_dispatch:
+ #push:
+   #branches: [master]
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+       
+    - name: Start SignServer Container
+      run: sudo docker run -d -it --rm --name signserver -p 80:8080 -p 443:8443 -e LOG_LEVEL_APP=DEBUG -v /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/ManagementCA.cacert.crt:/mnt/external/secrets/tls/cas/ManagementCA.crt -h localhost keyfactor/signserver-ce:6.2.0  
+          
+    - name: Wait for Container to deploy
+      run: sleep 180s
+      shell: bash
+
+    - name: Add CryptoTokenP12
+      run: |
+          curl --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/TestCN.p12:foo123 \
+          -d '{"properties": {
+                "KEYSTOREPATH": "/opt/signserver/res/test/dss10/dss10_keystore.p12",
+                "IMPLEMENTATION_CLASS": "org.signserver.server.signers.CryptoWorker",
+                "KEYSTORETYPE": "PKCS12",
+                "TYPE": "CRYPTO_WORKER",
+                "CRYPTOTOKEN_IMPLEMENTATION_CLASS": "org.signserver.server.cryptotokens.KeystoreCryptoToken",
+                "KEYSTOREPASSWORD": "foo123",
+                "NAME": "CryptoTokenP12" }}' \
+          -H "Content-Type: application/json" \
+          -H "X-Keyfactor-Requested-With: 1" https://localhost:443/signserver/rest/v1/workers \
+          --insecure 
+             
+    - name: Add PDFSigner
+      run: |
+          curl --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/TestCN.p12:foo123 \-d '{"properties": {"LOCATION": "Stockholm",
+                "DEFAULTKEY": "signer00003",
+                "DIGESTALGORITHM": "SHA256",
+                "NAME": "PDFSigner",
+                "ADD_VISIBLE_SIGNATURE": "True",
+                "VISIBLE_SIGNATURE_CUSTOM_IMAGE_BASE64": "iVBORw0KGgoAAAANSUhEUgAAAN0AAABBCAMAAABivlEQAAAAdVBMVEX///9kjL27zeLw9u6IuHjS5M0fWJ+dttXp8udTmDy+2LZVVVUAAABmZma7u7sRERGIiIjd3d13d3eqqqqZmZlERETMzMwiIiIzMzPu7u7x8+WzuFrY3rX+9uT6uSn95a6jeIzIuMb/+u7803n+783jUEbzsq7HjcN5AAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAACxMAAAsTAQCanBgAAAAHdElNRQfhChgNNBBglHWWAAAEt0lEQVRo3u2aZ5vjKAyA2et7dDdgr+z1//8TVxJgyyW5ScbjbOYxHzLxyEa8qAGO+LBu3whs3363bt+LJ2s/rNuPJPjp47r9fLEbqfQ7ozNaKWWdh68evl3X4x3cohrzLHTIRq19ge26enPzHHRgi34QorVK+f/VMigVYBKGqFT3FHQw0IR/25fYo8kWFkmp+BR0QVlRBtzjVU+owBxbrQL5onFBKTlkLx7qnNB9PTipS1nie9XD3S5nJ4WhiQ8Gl9X0JmTZkXRy5mSZrkSXLXQxXyVyY70O2eDpa8D5sdmo9CflB6nLgOLj6SCUlGxndJA5rSHuTGdbuoChJRhidCzFSHJpTXTRZ2CYBUN3a/psaPoC3Xt8zjSBcuAw0blizlDoXK4VaDWPrlhng+Q0/DT6rKlEqT4CXhynADi+mjsacu8rnSyJptJ1Ex2YitwxGLJ6U0xoKO5E9kmJQHmS2uK/40w8Zq3iYg4footlJJt0iAP4AGTU2LqJroEAHegZN8n9Y+nImZoX0lGsRfzYoAOy1pHxm8fT1RTOK4Isy7EVnR9TA1aEgVfIkQ5ETU+3Vc/kMXow3ZATdv0yyyp2ZTtLdYFEqsgxk8zoHFQSwhqquc3D6NBQ0o+Lq1wR7LwiTHTAHUGSZL3CRZxTMTE6X2ojdaCTSBrvfVTcyRocclnN13RTpqjFjZrmdOi12Wa1mqPvPyyrGAp/3U5rFWF6XIltZRXvLFaPUtFbWasfo2Pxhqk4l9IH58yNZl81oq9wb15SjSvLDvkO6WA12eQVmnmPttNTNniHdMJQtvhaLPc2WUWcdCfdSXfSvR2dVjc/0pcNxQPp6oo5HwZ19YDMBzxccNMJ7lW6eSfjUelL6BYad6fryt4c9jHjFajy4hY63slNbaHxjehgs6nHq6rqVrrcyT10V+Eu0336Zd1+3RoYhEm98sEO4i466uQOulHjjXS//b5unzcHhuOnqxSrqhld0uVc0FcD6SpedmLooLbHDRR84P4xDsLT8i4/YWLe9K40jpKZkh3oZLEdUzWjCxoPKKzHOym6kpUXOgl0OJrpbJT0XIuLchNCon4xCkKN9JnGKuFKXk9X4y5FNYgtOpeV9Xjg1+Vzv/ZCJ/kgKtPlgzNfNuwG7zS5L4+iuUYm4UpeTedsoJl0UYW0SVf/BVLbVzttd9IyulIWQnklhkQycENzjVzClLyCrhwQlVNza12Z+m06mssG/5+m48xlJ4bRlfGG0ikdHDZT93ONXMKU7BB3hW6ArpvLdORaAzpQN3nwspPrdJ4fUs80ziRMyW50HRVld51OxDCN+w46d0HjTMKU7EoHqWC46pkgMImN5DY6wd9hzzXO3m5PSvalS8FeWqs09PYrKc1kt9Ixqy80cglTsi+d8DamyxWBUlnoxb10ppjIdEuNXMKU7EwHIS0XdFaN1Ty/4+rupoN+Jb1rbzY0jhKmZG+6XJI5XRhkfUNLuZtvb26lo6N81Zu1RiZhSv5Ytz9J8Nff6/bPDhvKeMQPyqqSf9ftv7fUOxxxTj0qOZpOH/ECZVRyMJ074ndik5JD6fQRrxi4kqM989h20p10J91Jd9KddCfdSXfSnXQn3UnH2hdbIP0J96QFWgAAAABJRU5ErkJggg==",
+                "CRYPTOTOKEN": "CryptoTokenP12",
+                "VISIBLE_SIGNATURE_CUSTOM_IMAGE_PATH": "C:\\Dokumanlar\\FOTO\\Photos\\15032009\\100_3801.JPG",
+                "AUTHTYPE": "NOAUTH",
+                "IMPLEMENTATION_CLASS": "org.signserver.module.pdfsigner.PDFSigner",
+                "VISIBLE_SIGNATURE_PAGE": "2",
+                "REASON": "Officially issued document",
+                "TYPE": "PROCESSABLE",
+                "DISABLEKEYUSAGECOUNTER": "true" }}' \
+          -H "Content-Type: application/json"  \
+          -H "X-Keyfactor-Requested-With: 1" \
+          https://localhost:443/signserver/rest/v1/workers \
+          --insecure
+      
+    - name: Sign PDF
+      id: sign-file
+      uses: ./
+      with:
+        endpoint: http://localhost:80/signserver
+        file-path: /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/sample.pdf
+        worker-name: PDFSigner
+        worker-type: PDFSigner
