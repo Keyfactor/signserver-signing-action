@@ -13,7 +13,7 @@ jobs:
       uses: actions/checkout@v4
        
     - name: Start SignServer Container
-      run: sudo docker run -d -it --rm --name signserver -p 80:8080 -p 443:8443 -e LOG_LEVEL_APP=DEBUG -v /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/ManagementCA.cacert.crt:/mnt/external/secrets/tls/cas/ManagementCA.crt -h localhost keyfactor/signserver-ce:6.2.0  
+      run: sudo docker run -d -it --rm --name signserver -p 80:8080 -p 443:8443 -e LOG_LEVEL_APP=DEBUG -v /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ManagementCA.cacert.crt:/mnt/external/secrets/tls/cas/ManagementCA.crt -h localhost keyfactor/signserver-ce:6.2.0  
           
     - name: Wait for Container to deploy
       run: sleep 180s
@@ -21,7 +21,7 @@ jobs:
 
     - name: Add CryptoTokenP12
       run: |
-          curl --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/TestCN.p12:foo123 \
+          curl --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/TestCN.p12:foo123 \
           -d '{"properties": {
                 "KEYSTOREPATH": "/opt/signserver/res/test/dss10/dss10_keystore.p12",
                 "IMPLEMENTATION_CLASS": "org.signserver.server.signers.CryptoWorker",
@@ -36,7 +36,7 @@ jobs:
              
     - name: Add JArchiveSigner
       run: |
-          curl --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/TestCN.p12:foo123 \-d '{"properties": {
+          curl --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/TestCN.p12:foo123 \-d '{"properties": {
                 "DEFAULTKEY": "signer00003",
                 "NAME": "JArchiveSigner",
                 "CRYPTOTOKEN": "CryptoTokenP12",
@@ -52,17 +52,17 @@ jobs:
     - name: Add ClientAuth 
       run: |
        curl -v --request POST --header "Content-Type: text/xml;charset=UTF-8" \
-        --data @/home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/addAuthorizedClients.xml \
+        --data @/home/runner/work/signserver-signing-action/signserver-signing-action/testing/addAuthorizedClients.xml \
         https://localhost:443/signserver/AdminWSService/AdminWS?wsdl \
-        --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/ClientAuth.p12:foo123 \
+        --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12:foo123 \
         --insecure
 
     - name: Reload
       run: |
        curl -v --request POST --header "Content-Type: text/xml;charset=UTF-8" \
-        --data @/home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/reloadConfiguration.xml \
+        --data @/home/runner/work/signserver-signing-action/signserver-signing-action/testing/reloadConfiguration.xml \
         https://localhost:443/signserver/AdminWSService/AdminWS?wsdl \
-        --cert-type P12 --cert /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/ClientAuth.p12:foo123 \
+        --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12:foo123 \
         --insecure
         
       
@@ -71,8 +71,8 @@ jobs:
       uses: ./
       with:
         endpoint: https://localhost:443/signserver
-        file-path: /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/HelloJar.jar
+        file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/HelloJar.jar
         worker-name: JArchiveSigner
         worker-type: JArchiveSigner
-        client-cert: /home/runner/work/SignServer-GitHubAction-JarSigning/SignServer-GitHubAction-JarSigning/testing/ClientAuth.p12
+        client-cert: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12
         password: foo123
