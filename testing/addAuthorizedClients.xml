@@ -1,0 +1,15 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:adm="http://adminws.signserver.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <adm:addAuthorizedClient>
+         <workerId>2</workerId>
+         <!--Optional:-->
+         <authClient>
+            <!--Optional:-->
+            <certSN>37ba76b77361161e19ec388ddca495f648f05c94</certSN>
+            <!--Optional:-->
+            <issuerDN>UID=c-0jz13jzdgg09pwv29,CN=ManagementCA,O=EJBCA Container Quickstart</issuerDN>
+         </authClient>
+      </adm:addAuthorizedClient>
+   </soapenv:Body>
+</soapenv:Envelope>

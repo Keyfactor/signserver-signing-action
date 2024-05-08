@@ -1,0 +1,8 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:adm="http://adminws.signserver.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <adm:reloadConfiguration>
+         <workerId>2</workerId>
+      </adm:reloadConfiguration>
+   </soapenv:Body>
+</soapenv:Envelope>

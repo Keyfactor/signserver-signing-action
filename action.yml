@@ -1,0 +1,87 @@
+name: SignServer Signing
+author: Hanna Hansson
+description: Sign an input file with SignServer
+
+inputs:
+  endpoint:
+    description: The SignServer signing endpoint.
+    required: true
+  file-path:
+    description: The path to the file to be signed
+    required: true
+  worker-name:
+    description: The name of the Signer to use for the signing. 
+    required: true
+  worker-type:
+    description: The type of worker
+    required: true
+  client-cert:
+    description: The client cert needed for authorization
+    default: null
+    required: false
+  password:
+    description: Password for clientcert.
+    required: false
+    
+runs:
+  using: "composite"
+  steps:
+    # - name: Worker check
+    # Not supported until we have a REST call that returns id when name is provided since id is needed to request worker config.
+ 
+    - name: Invoke signing
+      shell: bash
+      id: signed_input
+      env:
+        WORKER_NAME: ${{inputs.worker-name}}
+        WORKER_TYPE: ${{inputs.worker-type}}
+        FILE_PATH: ${{inputs.file-path}}
+        ENDPOINT: ${{inputs.endpoint}}
+        CLIENT_CERT: ${{inputs.client-cert}}
+        PASSWORD: ${{inputs.password}}
+        
+      run: |
+        if [ "$WORKER_TYPE" == "JArchiveSigner" ]; then
+          if [ "$CLIENT_CERT" == "" ]; then
+            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output signed-input.jar ${ENDPOINT}/process
+          elif [ "$CLIENT_CERT" != "" ]; then
+             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output signed-input.jar ${ENDPOINT}/process --insecure
+          fi
+        fi
+        if [ "$WORKER_TYPE" == "PDFSigner" ]; then
+          if [ "$CLIENT_CERT" == "" ]; then
+            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output signed-input.pdf ${ENDPOINT}/process
+          elif [ "$CLIENT_CERT" != "" ]; then
+             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output signed-input.pdf ${ENDPOINT}/process --insecure
+          fi
+        fi
+          if [ "$WORKER_TYPE" == "PlainSigner" ]; then
+          if [ "$CLIENT_CERT" == "" ]; then
+            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output signed-input ${ENDPOINT}/process
+          elif [ "$CLIENT_CERT" != "" ]; then
+             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output signed-input ${ENDPOINT}/process --insecure
+          fi
+        fi
+
+    - name: Upload jar to artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ inputs.worker-type == 'JArchiveSigner' }}
+      with:
+        name: signed-input.jar
+        path: signed-input.jar
+        retention-days: 1
+    - name: Upload PDF to artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ inputs.worker-type == 'PDFSigner' }}
+      with:
+        name: signed-input.pdf
+        path: signed-input.pdf
+        retention-days: 1
+    - name: Upload PlainSigner to artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ inputs.worker-type == 'PlainSigner' }}
+      with:
+        name: signed-input
+        path: signed-input
+        retention-days: 1
+
