@@ -4,7 +4,7 @@ This action can return a signed input produced by the provided SignServer endpoi
 
 # Prerequisities
 
-A running SignServer instance with the needed worker congigured.
+A running SignServer instance with the needed worker configured.
 
 The supported workers as well as authentication types are listed below.
 
