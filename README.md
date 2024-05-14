@@ -2,6 +2,29 @@
 
 This action can return a signed input produced by the provided SignServer endpoint and uploads it as an artifact for access or further use.
 
+# Support for SignServer Signing action
+
+SignServer Signing action is open source and community supported, meaning that there is no support guaranteed from Keyfactor Support for these tools.
+
+# Community Support
+
+In our Community we welcome contributions. The Community software is open source and community supported, there is no support SLA, but a helpful best-effort Community.
+
+* To report a problem or suggest a new feature, use the [Issues](https://github.com/Keyfactor/signserver-signing-action/issues) tab.
+* If you want to contribute actual bug fixes or proposed enhancements, use the [Pull requests](https://github.com/Keyfactor/signserver-signing-action/pulls) tab.
+* Ask the community for ideas: [SignServer Discussions](https://github.com/Keyfactor/signserver-ce/discussions).
+* Read more in our documentation: [SignServer Documentation](https://doc.primekey.com/signserver).
+* See release information: [SignServer Release information](https://doc.primekey.com/signserver/signserver-release-information).
+* Read more on the open source project website: [SignServer website](https://www.signserver.org/).
+
+# Commercial Support
+
+Commercial support is available for [SignServer Enterprise](https://www.keyfactor.com/platform/keyfactor-signserver-enterprise/).
+
+# License
+
+For License information, see [LICENSE](https://github.com/Keyfactor/signserver-signing-action/blob/main/LICENSE)
+
 # Prerequisities
 
 A running SignServer instance with the needed worker configured.
