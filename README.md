@@ -11,30 +11,30 @@
 
 The SignServer Signing action can return a signed input produced by the provided SignServer endpoint and upload it as an artifact for access or further use.
 
-# Get started
+## Get started
 
 A running SignServer instance with the needed worker configured.
 
-## Prerequisities
+### Prerequisities
 
 A running SignServer instance with the needed worker configured.
 
 The supported workers as well as authentication types are listed below.
 
-## Supported workers
+### Supported workers
 
 The current version of this action supports 3 types of workers:
 * `JArchiveSigner`: takes jar as input and uploads signed jar as artifact
 * `PDFSigner`: takes pdf as input and uploads signed pdf as artifact
 * `PlainSigner`: takes any input and uploads signed input as artifact
 
-## Supported authentication types
+### Supported authentication types
 
 The following authentication types are supported:
 * `NOAUTH` - will be used as default if no clientcert is provided
 * `CLIENTCERT` - need to provide clientcert and password for authentication
 
-## Input parameters
+### Input parameters
 
 `endpoint`: (Required) The SignServer signing endpoint.
 
@@ -48,7 +48,7 @@ The following authentication types are supported:
 
 `password`: (Optional) Password for clientcert.
 
-## Example usage
+### Example usage
 
 ```
 jobs:
@@ -67,7 +67,7 @@ jobs:
             worker-type: PlainSigner
 ```
 
-# Community Support
+## Community Support
 
 In our Community we welcome contributions. SignServer Signing action is open source and community supported, there is no support SLA, but a helpful best-effort Community.
 
@@ -78,10 +78,10 @@ In our Community we welcome contributions. SignServer Signing action is open sou
 * See release information: [SignServer Release information](https://doc.primekey.com/signserver/signserver-release-information).
 * Read more on the open source project website: [SignServer website](https://www.signserver.org/).
 
-# Commercial Support
+## Commercial Support
 
 Commercial support is available for [SignServer Enterprise](https://www.keyfactor.com/platform/keyfactor-signserver-enterprise/).
 
-# License
+## License
 
 For License information, see [LICENSE](https://github.com/Keyfactor/signserver-signing-action/blob/main/LICENSE)
