@@ -11,6 +11,62 @@
 
 The SignServer Signing action can return a signed input produced by the provided SignServer endpoint and upload it as an artifact for access or further use.
 
+# Get started
+
+A running SignServer instance with the needed worker configured.
+
+## Prerequisities
+
+A running SignServer instance with the needed worker configured.
+
+The supported workers as well as authentication types are listed below.
+
+## Supported workers
+
+The current version of this action supports 3 types of workers:
+* `JArchiveSigner`: takes jar as input and uploads signed jar as artifact
+* `PDFSigner`: takes pdf as input and uploads signed pdf as artifact
+* `PlainSigner`: takes any input and uploads signed input as artifact
+
+## Supported authentication types
+
+The following authentication types are supported:
+* `NOAUTH` - will be used as default if no clientcert is provided
+* `CLIENTCERT` - need to provide clientcert and password for authentication
+
+## Input parameters
+
+`endpoint`: (Required) The SignServer signing endpoint.
+
+`file-path`: (Required) The path to the file to be signed.
+
+`worker-name`: (Required) The name of the Signer to use for the signing.
+
+`worker-type`: (Required) The type of worker.
+
+`client-cert`: (Optional) The client cert needed for authorization.
+
+`password`: (Optional) Password for clientcert.
+
+## Example usage
+
+```
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Sign Jar
+          uses: ./  ** change to correct action name **
+          with:
+            endpoint: http://localhost:80/signserver
+            file-path: $GITHUB_WORKSPACE/input-file
+            worker-name: PlainSigner
+            worker-type: PlainSigner
+```
+
 # Community Support
 
 In our Community we welcome contributions. SignServer Signing action is open source and community supported, there is no support SLA, but a helpful best-effort Community.
@@ -29,56 +85,3 @@ Commercial support is available for [SignServer Enterprise](https://www.keyfacto
 # License
 
 For License information, see [LICENSE](https://github.com/Keyfactor/signserver-signing-action/blob/main/LICENSE)
-
-# Prerequisities
-
-A running SignServer instance with the needed worker configured.
-
-The supported workers as well as authentication types are listed below.
-
-# Supported workers
-
-The current version of this action supports 3 types of workers:
-* `JArchiveSigner`: takes jar as input and uploads signed jar as artifact
-* `PDFSigner`: takes pdf as input and uploads signed pdf as artifact
-* `PlainSigner`: takes any input and uploads signed input as artifact
-
-# Supported authentication types
-
-The following authentication types are supported:
-* `NOAUTH` - will be used as default if no clientcert is provided
-* `CLIENTCERT` - need to provide clientcert and password for authentication
-
-# Input parameters
-
-`endpoint`: (Required) The SignServer signing endpoint.
-
-`file-path`: (Required) The path to the file to be signed.
-
-`worker-name`: (Required) The name of the Signer to use for the signing.
-
-`worker-type`: (Required) The type of worker.
-
-`client-cert`: (Optional) The client cert needed for authorization.
-
-`password`: (Optional) Password for clientcert.
-
-
-# Example usage
-
-```
-jobs:
-  testing:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Sign Jar
-          uses: ./  ** change to correct action name **
-          with:
-            endpoint: http://localhost:80/signserver
-            file-path: $GITHUB_WORKSPACE/input-file
-            worker-name: PlainSigner
-            worker-type: PlainSigner
-```
