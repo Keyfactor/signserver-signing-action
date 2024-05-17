@@ -36,14 +36,16 @@ A running SignServer instance with the needed worker configured.
 
 The supported workers as well as authentication types are listed below.
 
-# Use cases: Supported workers and authentication types
+# Supported workers
 
 The current version of this action supports 3 types of workers:
 * `JArchiveSigner`: takes jar as input and uploads signed jar as artifact
 * `PDFSigner`: takes pdf as input and uploads signed pdf as artifact
 * `PlainSigner`: takes any input and uploads signed input as artifact
 
-And for authentication currently supported:
+# Supported authentication types
+
+The following authentication types are supported:
 * `NOAUTH` - will be used as default if no clientcert is provided
 * `CLIENTCERT` - need to provide clientcert and password for authentication
 
