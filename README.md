@@ -69,7 +69,9 @@ jobs:
 
 ## Community Support
 
-In our Community we welcome contributions. SignServer Signing action is open source and community supported, there is no support SLA, but a helpful best-effort Community.
+In the [Keyfactor Community](https://www.keyfactor.com/community/), we welcome contributions. 
+
+The SignServer Signing action is open-source and community-supported, meaning that **no SLA** is applicable.
 
 * To report a problem or suggest a new feature, use the [Issues](https://github.com/Keyfactor/signserver-signing-action/issues) tab.
 * If you want to contribute actual bug fixes or proposed enhancements, see the [Contributing Guidelines](CONTRIBUTING.md) and go to [Pull requests](../../pulls).
