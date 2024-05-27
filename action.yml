@@ -2,6 +2,10 @@ name: SignServer Signing
 author: Hanna Hansson
 description: Sign an input file with SignServer
 
+branding:
+  icon: 'edit-3'
+  color: 'blue'
+
 inputs:
   endpoint:
     description: The SignServer signing endpoint.

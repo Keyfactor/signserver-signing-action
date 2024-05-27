@@ -1,10 +1,18 @@
-<!-- SignServer Community logo -->
+<!--SignServer Community logo for light and dark mode -->
 <a href="https://signserver.org">
-    <img src=".github/images/community-signserver.png?raw=true)" alt="SignServer logo" title="SignServer" height="70" />
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset=".github/images/community-signserver.png?raw=true">
+    <source media="(prefers-color-scheme: dark)" srcset=".github/images/community-signserver-lite.png?raw=true">
+    <img alt="SignServer Community" src=".github/images/community-ejbca.png?raw=true" title="SignServer Community" height="70" >
+  </picture>
 </a>
-<!-- SignServer Enterprise logo -->
+<!--SignServer Enterprise logo for light and dark mode -->
 <a href="https://www.keyfactor.com/products/signserver-enterprise/">
-    <img src=".github/images/keyfactor-signserver-enterprise.png?raw=true)" alt="SignServer logo" title="SignServer" height="70" />
+  <picture>
+    <source media="(prefers-color-scheme: light)" srcset=".github/images/keyfactor-signserver-enterprise.png?raw=true">
+    <source media="(prefers-color-scheme: dark)" srcset=".github/images/keyfactor-signserver-enterprise-lite.png?raw=true">
+    <img alt="SignServer Enterprise" src=".github/images/keyfactor-signserver-enterprise.png?raw=true" title="SignServer Enterprise" height="70" >
+  </picture>
 </a>
 
 # SignServer Signing action
