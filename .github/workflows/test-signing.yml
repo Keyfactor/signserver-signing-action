@@ -2,8 +2,6 @@ name: test-signing
 
 on:
  workflow_dispatch:
- push:
-   branches: [update-to-support-more-workers]
 
 jobs:
   start-container:
@@ -22,8 +20,11 @@ jobs:
   set-up-cryptoToken:
     runs-on: ubuntu-latest
     steps:
-      - name: Add CryptoTokenP12
-        run: |
+     - name: Checkout
+       uses: actions/checkout@v4
+      
+     - name: Add CryptoTokenP12
+       run: |
           curl --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/TestCN.p12:foo123 \
           -d '{"properties": {
                 "KEYSTOREPATH": "/opt/signserver/res/test/dss10/dss10_keystore.p12",
@@ -40,8 +41,11 @@ jobs:
   set-up-workers:
     runs-on: ubuntu-latest
     steps:
-      - name: Add PDFSigner
-        run: |
+     - name: Checkout
+       uses: actions/checkout@v4
+      
+     - name: Add PDFSigner
+       run: |
           curl --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/TestCN.p12:foo123 \-d '{"properties": {"LOCATION": "Stockholm",
                 "DEFAULTKEY": "signer00003",
                 "DIGESTALGORITHM": "SHA256",
@@ -64,10 +68,13 @@ jobs:
   test-signing-pdf:
     runs-on: ubuntu-latest
     steps:
-      - name: Sign PDF
-        id: sign-file
-        uses: ./
-        with:
+     - name: Checkout
+       uses: actions/checkout@v4
+     
+     - name: Sign PDF
+       id: sign-file
+       uses: ./
+       with:
           endpoint: http://localhost:80/signserver
           file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/sample.pdf
           worker-name: PDFSigner
