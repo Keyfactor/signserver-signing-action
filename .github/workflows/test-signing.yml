@@ -2,6 +2,8 @@ name: test-signing
 
 on:
  workflow_dispatch:
+ push:
+   branches: [update-to-support-more-workers]
 
 jobs:
   start-container:
