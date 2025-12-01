@@ -42,6 +42,7 @@ jobs:
           --insecure 
   
   set-up-workers:
+    if: ${{ github.event.workflow_run.set-up-cryptoToken == 'success' }}
     runs-on: ubuntu-latest
     steps:
      - name: Checkout
@@ -69,6 +70,7 @@ jobs:
           --insecure
 
   test-signing-pdf:
+    if: ${{ github.event.workflow_run.set-up-workers == 'success' }}
     runs-on: ubuntu-latest
     steps:
      - name: Checkout
