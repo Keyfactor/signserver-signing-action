@@ -55,7 +55,7 @@ runs:
     - name: Upload PlainSigner to artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: artifact
+        name: ${{ env.OUTPUT }}
         path: ${{ env.OUTPUT }}
         retention-days: 1
 
