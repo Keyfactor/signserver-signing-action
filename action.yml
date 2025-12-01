@@ -53,7 +53,6 @@ runs:
 
     - name: Upload PlainSigner to artifacts
       uses: actions/upload-artifact@v4
-      if: ${{ inputs.worker-type == 'PlainSigner' }}
       with:
         name: ${OUTPUT}
         path: ${OUTPUT}
