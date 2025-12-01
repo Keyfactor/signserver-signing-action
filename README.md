@@ -31,10 +31,7 @@ The supported workers as well as authentication types are listed below.
 
 ### Supported workers
 
-The current version of this action supports 3 types of workers:
-* `JArchiveSigner`: takes jar as input and uploads signed jar as artifact
-* `PDFSigner`: takes pdf as input and uploads signed pdf as artifact
-* `PlainSigner`: takes any input and uploads signed input as artifact
+The latest version of this action supports all workers with a standard input format to be signed such as a file.
 
 ### Supported authentication types
 
@@ -50,7 +47,7 @@ The following authentication types are supported:
 
 `worker-name`: (Required) The name of the Signer to use for the signing.
 
-`worker-type`: (Required) The type of worker.
+`output-file-name`: (Required) The name that the signed output returned as an artifact.
 
 `client-cert`: (Optional) The client cert needed for authorization.
 
@@ -67,12 +64,12 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Sign Jar
-          uses: ./  ** change to correct action name **
+          uses: signserver-signing-action@vx.x.x
           with:
             endpoint: http://localhost:80/signserver
             file-path: $GITHUB_WORKSPACE/input-file
             worker-name: PlainSigner
-            worker-type: PlainSigner
+            output-file-name: signed-file
 ```
 
 ## Community Support

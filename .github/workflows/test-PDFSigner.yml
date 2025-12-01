@@ -62,4 +62,4 @@ jobs:
         endpoint: http://localhost:80/signserver
         file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/sample.pdf
         worker-name: PDFSigner
-        worker-type: PDFSigner
+        output-file-name: sample-signed.pdf

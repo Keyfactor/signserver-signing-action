@@ -1,9 +1,9 @@
-name: test clientcert
+name: test-CMSSigner
 
 on:
  workflow_dispatch:
- #push:
-   #branches: [master]
+ push:
+   branches: [update-to-support-more-workers]
 
 jobs:
   testing:
@@ -34,45 +34,33 @@ jobs:
           -H "X-Keyfactor-Requested-With: 1" https://localhost:443/signserver/rest/v1/workers \
           --insecure 
              
-    - name: Add JArchiveSigner
+    - name: Add CMSSigner
       run: |
           curl --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/TestCN.p12:foo123 \-d '{"properties": {
                 "DEFAULTKEY": "signer00003",
-                "NAME": "JArchiveSigner",
+                "NAME": "CMSSigner",
+                "ACCEPTED_HASH_DIGEST_ALGORITHMS": "SHA-256,SHA-384,SHA-512",
                 "CRYPTOTOKEN": "CryptoTokenP12",
-                "AUTHTYPE": "CLIENTCERT",
-                "IMPLEMENTATION_CLASS": "org.signserver.module.jarchive.signer.JArchiveSigner",
+                "AUTHTYPE": "NOAUTH",
+                "IMPLEMENTATION_CLASS": "org.signserver.module.cmssigner.CMSSigner",
                 "TYPE": "PROCESSABLE",
+                "DETACHEDSIGNATURE": "false",
+                "ALLOW_DETACHEDSIGNATURE_OVERRIDE": "false",
                 "DISABLEKEYUSAGECOUNTER": "true" }}' \
           -H "Content-Type: application/json"  \
           -H "X-Keyfactor-Requested-With: 1" \
           https://localhost:443/signserver/rest/v1/workers \
           --insecure
-
-    - name: Add ClientAuth 
+          
+    - name: Create file to sign
       run: |
-       curl -v --request POST --header "Content-Type: text/xml;charset=UTF-8" \
-        --data @/home/runner/work/signserver-signing-action/signserver-signing-action/testing/addAuthorizedClients.xml \
-        https://localhost:443/signserver/AdminWSService/AdminWS?wsdl \
-        --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12:foo123 \
-        --insecure
-
-    - name: Reload
-      run: |
-       curl -v --request POST --header "Content-Type: text/xml;charset=UTF-8" \
-        --data @/home/runner/work/signserver-signing-action/signserver-signing-action/testing/reloadConfiguration.xml \
-        https://localhost:443/signserver/AdminWSService/AdminWS?wsdl \
-        --cert-type P12 --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12:foo123 \
-        --insecure
-        
+        echo "data to sign" > test
       
-    - name: Sign Jar
+    - name: Sign CMS
       id: sign-file
       uses: ./
       with:
-        endpoint: https://localhost:443/signserver
-        file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/HelloJar.jar
-        worker-name: JArchiveSigner
-        output-file-name: HelloJar-signed.jar
-        client-cert: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12
-        password: foo123
+        endpoint: http://localhost:80/signserver
+        file-path: ./test
+        worker-name: CMSSigner
+        output-file-name: test.p7s

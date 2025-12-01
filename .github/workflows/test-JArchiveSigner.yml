@@ -56,4 +56,4 @@ jobs:
         endpoint: http://localhost:80/signserver
         file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/HelloJar.jar
         worker-name: JArchiveSigner 
-        worker-type: JArchiveSigner
+        output-file-name: HelloJar-signed.jar
