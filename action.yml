@@ -54,12 +54,13 @@ runs:
           fi
         #echo "OUTPUT=${OUTPUT}" >> $GITHUB_OUTPUT
         #ls ./
-        ls -la ./${OUTPUT}
+        echo ${OUTPUT}
+        ls -la ./
 
     - name: Upload PlainSigner to artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${OUTPUT}
-        path: ./${OUTPUT}
+        path: ./
         retention-days: 1
 
