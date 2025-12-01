@@ -16,9 +16,6 @@ inputs:
   worker-name:
     description: The name of the Signer to use for the signing. 
     required: true
-  worker-type:
-    description: The type of worker
-    required: true
   client-cert:
     description: The client cert needed for authorization
     default: null
@@ -26,6 +23,9 @@ inputs:
   password:
     description: Password for clientcert.
     required: false
+  output-file-name:
+    description: Name of the signed output file.
+    required: true
     
 runs:
   using: "composite"
