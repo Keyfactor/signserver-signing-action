@@ -59,6 +59,6 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: ${OUTPUT}
-        path: ./${env.OUTPUT}
+        path: ./sample-signed.pdf
         retention-days: 1
 
