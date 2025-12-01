@@ -3,7 +3,7 @@ name: test-signing
 on:
  workflow_dispatch:
  push:
-  branches: [master]
+  branches: [update-to-support-more-workers]
 
 jobs:
   start-container:
