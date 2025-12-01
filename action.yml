@@ -45,8 +45,6 @@ runs:
         OUTPUT: ${{inputs.output-file-name}}
         
       run: |
-        pwd
-        ls
         if [ "$CLIENT_CERT" == "" ]; then
             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
           elif [ "$CLIENT_CERT" != "" ]; then
@@ -54,13 +52,13 @@ runs:
           fi
         #echo "OUTPUT=${OUTPUT}" >> $GITHUB_OUTPUT
         #ls ./
-        echo ${OUTPUT}
-        ls -la ./
+        echo ${env.OUTPUT}
+        #ls -la ./
 
     - name: Upload PlainSigner to artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${OUTPUT}
-        path: ./
+        name: ${{env.OUTPUT}}
+        path: ./${{env.OUTPUT}}
         retention-days: 1
 
