@@ -20,6 +20,7 @@ jobs:
       shell: bash
   
   set-up-cryptoToken:
+    if: ${{ github.event.workflow_run.start-container == 'success' }}
     runs-on: ubuntu-latest
     steps:
      - name: Checkout
