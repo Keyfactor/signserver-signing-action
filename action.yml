@@ -50,15 +50,12 @@ runs:
           elif [ "$CLIENT_CERT" != "" ]; then
              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
           fi
-        #echo "OUTPUT=${OUTPUT}" >> $GITHUB_OUTPUT
-        #ls ./
-        echo ${OUTPUT}
-        #ls -la ./
+        echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
 
     - name: Upload PlainSigner to artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${OUTPUT}
-        path: ./sample-signed.pdf
+        name: artifact
+        path: ${{ env.OUTPUT }}
         retention-days: 1
 
