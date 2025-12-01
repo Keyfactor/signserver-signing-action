@@ -52,7 +52,7 @@ runs:
           fi
         echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
 
-    - name: Upload PlainSigner to artifacts
+    - name: Upload signed file to artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.OUTPUT }}
