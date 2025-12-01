@@ -52,12 +52,14 @@ runs:
           elif [ "$CLIENT_CERT" != "" ]; then
              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
           fi
-        ls
+        echo "OUTPUT=${OUTPUT}" >> $GITHUB_OUTPUT
+        outputs:
+          OUTPUT: ${{ steps.set-vars.outputs.OUTPUT }}
 
     - name: Upload PlainSigner to artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${env.OUTPUT}
-        path: ${env.OUTPUT}
+        name: ${needs.set-global-env-var.outputs.OUTPUT}
+        path: ${needs.set-global-env-var.outputs.OUTPUT}
         retention-days: 1
 
