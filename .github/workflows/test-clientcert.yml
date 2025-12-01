@@ -73,6 +73,6 @@ jobs:
         endpoint: https://localhost:443/signserver
         file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/HelloJar.jar
         worker-name: JArchiveSigner
-        worker-type: JArchiveSigner
+        output-file-name: HelloJar-signed.jar
         client-cert: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12
         password: foo123
