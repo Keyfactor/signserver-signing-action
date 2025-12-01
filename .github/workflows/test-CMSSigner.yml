@@ -44,8 +44,8 @@ jobs:
                 "AUTHTYPE": "NOAUTH",
                 "IMPLEMENTATION_CLASS": "org.signserver.module.cmssigner.CMSSigner",
                 "TYPE": "PROCESSABLE",
-                "DETACHEDSIGNATURE": "FALSE"'
-                "ALLOW_DETACHEDSIGNATURE_OVERRIDE": "FALSE",
+                "DETACHEDSIGNATURE": "false",
+                "ALLOW_DETACHEDSIGNATURE_OVERRIDE": "false",
                 "DISABLEKEYUSAGECOUNTER": "true" }}' \
           -H "Content-Type: application/json"  \
           -H "X-Keyfactor-Requested-With: 1" \
