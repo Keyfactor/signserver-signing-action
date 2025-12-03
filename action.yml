@@ -26,6 +26,11 @@ inputs:
   output-file-name:
     description: Name of the signed output file.
     required: true
+  disable-cert-ver
+    description: Property to disable certificate validation when using curl.
+    type: boolean
+    required: false
+    default: false
     
 runs:
   using: "composite"
@@ -43,12 +48,15 @@ runs:
         CLIENT_CERT: ${{inputs.client-cert}}
         PASSWORD: ${{inputs.password}}
         OUTPUT: ${{inputs.output-file-name}}
+        DISABLE_CERT_VER: ${{inputs.disable-cert-ver}}
         
       run: |
         if [ "$CLIENT_CERT" == "" ]; then
             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
-          elif [ "$CLIENT_CERT" != "" ]; then
+          elif [ "$CLIENT_CERT" != "" && "DISABLE_CERT_VER"]; then
              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
+          elif [ "$CLIENT_CERT" != ""]; then
+             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process
           fi
         echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
 
