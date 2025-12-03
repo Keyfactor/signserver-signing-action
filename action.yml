@@ -26,7 +26,7 @@ inputs:
   output-file-name:
     description: Name of the signed output file.
     required: true
-  disable-cert-ver
+  disable-cert-ver:
     description: Property to disable certificate validation when using curl.
     type: boolean
     required: false
