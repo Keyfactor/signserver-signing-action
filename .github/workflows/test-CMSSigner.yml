@@ -56,8 +56,18 @@ jobs:
       run: |
         echo "data to sign" > test
       
-    - name: Sign CMS
-      id: sign-file
+    - name: Sign CMS openssl
+      id: sign-file-openssl
+      uses: ./
+      with:
+        endpoint: http://localhost:80/signserver
+        file-path: ./test
+        worker-name: CMSSigner
+        output-file-name: test.p7s
+        rest: false
+
+    - name: Sign CMS REST
+      id: sign-file-rest
       uses: ./
       with:
         endpoint: http://localhost:80/signserver
