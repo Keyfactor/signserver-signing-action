@@ -66,8 +66,20 @@ jobs:
         --insecure
         
       
-    - name: Sign Jar
-      id: sign-file
+    - name: Sign Jar OpenSSL
+      id: sign-file-openssl
+      uses: ./
+      with:
+        endpoint: https://localhost:443/signserver
+        file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/HelloJar.jar
+        worker-name: JArchiveSigner
+        output-file-name: HelloJar-signed.jar
+        client-cert: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12
+        password: foo123
+        disable-cert-val: true
+        rest: false
+    - name: Sign Jar REST
+      id: sign-file-rest
       uses: ./
       with:
         endpoint: https://localhost:443/signserver
