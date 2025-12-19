@@ -50,8 +50,17 @@ jobs:
           https://localhost:443/signserver/rest/v1/workers \
           --insecure
       
-    - name: Sign Plain
-      id: sign-file
+    - name: Sign Plain OpenSSL
+      id: sign-file-openssl
+      uses: ./
+      with:
+        endpoint: http://localhost:80/signserver
+        file-path: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/sample.pdf
+        worker-name: PlainSigner
+        output-file-name: sample-signed.pdf
+        rest: false
+    - name: Sign Plain REST
+      id: sign-file-rest
       uses: ./
       with:
         endpoint: http://localhost:80/signserver
