@@ -27,12 +27,12 @@ inputs:
     description: Name of the signed output file.
     required: true
   disable-cert-val:
-    description: Property to disable certificate validation when using curl. Default: false
+    description: Property to disable certificate validation when using curl. Default value is false.
     type: boolean
     required: false
     default: false
   rest:
-    description: If true REST api is used to make the call to SignServer. Default: true
+    description: If true REST api is used to make the call to SignServer. Default value is true.
     type: boolean
     required: false
     default: true
