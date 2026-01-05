@@ -59,12 +59,12 @@ runs:
       run: |
         if [ "$REST" == "true" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
-            curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form 'type=multipart/form-data'
+            curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form 'type=multipart/form-data;charset=utf-8'
           elif [ "$CLIENT_CERT" != "" ]; then
             if [ "$DISABLE_CERT_VAL" == "true" ]; then
-              curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD} --insecure
+              curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form 'type=multipart/form-data;charset=utf-8' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD} --insecure
             elif ["$DISABLE_CERT_VAL" == "false" ]; then
-              curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
+              curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form 'type=multipart/form-data;charset=utf-8' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
             fi
           fi
           echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
