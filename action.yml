@@ -57,7 +57,7 @@ runs:
         REST: ${{inputs.rest}}
         
       run: |
-        if ["$REST"]; then
+        if ["$REST" == true]; then
           if [ "$CLIENT_CERT" == "" ]; then
             curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form 'myfile=@${FILE_PATH}' --form ';type=multipart/form-data;charset=utf-8'
           elif [ "$CLIENT_CERT" != "" ]; then
