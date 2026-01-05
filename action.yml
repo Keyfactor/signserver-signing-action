@@ -69,16 +69,7 @@ runs:
           fi
           echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
         elif ["$REST" == "false"]; then
-          if [ "$CLIENT_CERT" == "" ]; then
-            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
-          elif [ "$CLIENT_CERT" != "" ]; then
-            if [ "$DISABLE_CERT_VAL" == "true" ]; then
-              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
-            elif ["$DISABLE_CERT_VAL" == "false" ]; then
-              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process
-            fi
-          fi
-          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
+          
         else
           echo "interface ${INTERFACE} not supported
         fi
