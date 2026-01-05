@@ -68,7 +68,7 @@ runs:
             fi
           fi
           echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
-        elif ["$REST" == "false"]; then
+        elif [!"$REST"]; then
           if [ "$CLIENT_CERT" == "" ]; then
             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
           elif [ "$CLIENT_CERT" != "" ]; then
