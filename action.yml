@@ -60,7 +60,7 @@ runs:
         if [ "$REST" == "true" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
             echo ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process
-            curl --location --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/TestCN.p12 --cert-type p12 --pass foo123 --request GET 'https://localhost:443/signserver/rest/v1/workers' --header 'X-Keyfactor-Requested-With: X' --insecure > curl_out
+            curl --location --cert /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12 --cert-type p12 --pass foo123 --request GET 'https://localhost:443/signserver/rest/v1/workers' --header 'X-Keyfactor-Requested-With: X' --insecure > curl_out
             echo "$(<curl_out )"
             # curl --output ${OUTPUT} --location --request POST '${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process' --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data'
           elif [ "$CLIENT_CERT" != "" ]; then
