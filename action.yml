@@ -68,7 +68,6 @@ runs:
               curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
             fi
           fi
-          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
         elif [ "$REST" == "false" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
@@ -79,8 +78,8 @@ runs:
               curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process
             fi
           fi
-          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
         fi
+        echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
         
     - name: Upload signed file to artifacts
       uses: actions/upload-artifact@v4
