@@ -57,18 +57,17 @@ runs:
         REST: ${{inputs.rest}}
         
       run: |
-        if [ "$REST" == "true" ]; then
-          if [ "$CLIENT_CERT" == "" ]; then
-            echo ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process
-            curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data'
-          elif [ "$CLIENT_CERT" != "" ]; then
-            if [ "$DISABLE_CERT_VAL" == "true" ]; then
-              curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD} --insecure
-            elif ["$DISABLE_CERT_VAL" == "false" ]; then
-              curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
-            fi
-          fi
-        elif [ "$REST" == "false" ]; then
+        #if [ "$REST" == "true" ]; then
+        #  if [ "$CLIENT_CERT" == "" ]; then
+        #    curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data'
+        #  elif [ "$CLIENT_CERT" != "" ]; then
+        #    if [ "$DISABLE_CERT_VAL" == "true" ]; then
+        #      curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD} --insecure
+        #    elif ["$DISABLE_CERT_VAL" == "false" ]; then
+        #      curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
+        #    fi
+        #  fi
+        #elif [ "$REST" == "false" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
             echo "openssl no cert"
             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
@@ -80,7 +79,7 @@ runs:
             fi
           fi
           echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
-        fi
+        #fi
             
     - name: Upload signed file to artifacts
       uses: actions/upload-artifact@v4
