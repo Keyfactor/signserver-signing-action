@@ -70,6 +70,7 @@ runs:
           fi
         elif [ "$REST" == "false" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
+            echo "openssl no cert"
             curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
           elif [ "$CLIENT_CERT" != "" ]; then
             if [ "$DISABLE_CERT_VAL" == "true" ]; then
