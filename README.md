@@ -63,7 +63,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Sign Jar
+    - name: Sign sample file
           uses: signserver-signing-action@vx.x.x
           with:
             endpoint: http://localhost:80/signserver
