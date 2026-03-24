@@ -76,3 +76,4 @@ jobs:
         output-file-name: HelloJar-signed.jar
         client-cert: /home/runner/work/signserver-signing-action/signserver-signing-action/testing/ClientAuth.p12
         password: foo123
+        disable-cert-val: true

@@ -53,6 +53,8 @@ The following authentication types are supported:
 
 `password`: (Optional) Password for clientcert.
 
+`disable-cert-val`: (Optional) Property to disable certificate validation when using curl.
+
 ### Example usage
 
 ```
