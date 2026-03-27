@@ -27,10 +27,15 @@ inputs:
     description: Name of the signed output file.
     required: true
   disable-cert-val:
-    description: Property to disable certificate validation when using curl.
+    description: Property to disable certificate validation when using curl. Default value is false.
     type: boolean
     required: false
     default: false
+  rest:
+    description: If true REST api is used to make the call to SignServer. Default value is true.
+    type: boolean
+    required: false
+    default: true
     
 runs:
   using: "composite"
@@ -49,19 +54,33 @@ runs:
         PASSWORD: ${{inputs.password}}
         OUTPUT: ${{inputs.output-file-name}}
         DISABLE_CERT_VAL: ${{inputs.disable-cert-val}}
+        REST: ${{inputs.rest}}
         
       run: |
-        if [ "$CLIENT_CERT" == "" ]; then
-          curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
-        elif [ "$CLIENT_CERT" != "" ]; then
-          if [ "$DISABLE_CERT_VAL" == "true" ]; then
-            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
-          elif ["$DISABLE_CERT_VAL" == "false" ]; then
-            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process
+        if [ "$REST" == "true" ]; then
+          if [ "$CLIENT_CERT" == "" ]; then
+            curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data'
+          elif [ "$CLIENT_CERT" != "" ]; then
+            if [ "$DISABLE_CERT_VAL" == "true" ]; then
+              curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD} --insecure
+            elif ["$DISABLE_CERT_VAL" == "false" ]; then
+              curl --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
+            fi
           fi
+          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
+        elif [ "$REST" == "false" ]; then
+          if [ "$CLIENT_CERT" == "" ]; then
+            curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
+          elif [ "$CLIENT_CERT" != "" ]; then
+            if [ "$DISABLE_CERT_VAL" == "true" ]; then
+              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
+            elif ["$DISABLE_CERT_VAL" == "false" ]; then
+              curl -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process
+            fi
+          fi
+          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
         fi
-        echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
-
+            
     - name: Upload signed file to artifacts
       uses: actions/upload-artifact@v4
       with:

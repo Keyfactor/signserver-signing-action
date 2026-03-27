@@ -53,7 +53,9 @@ The following authentication types are supported:
 
 `password`: (Optional) Password for clientcert.
 
-`disable-cert-val`: (Optional) Property to disable certificate validation when using curl.
+`disable-cert-val`: (Optional) Property to disable certificate validation when using curl. Default: false
+
+`rest`: (Optional) Property to choose if Signserver REST interface should be used when signing. Default: true
 
 ### Example usage
 
