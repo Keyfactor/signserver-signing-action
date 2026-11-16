@@ -1,0 +1,32 @@
+name: test-all
+ 
+on:
+  workflow_dispatch:
+  push:
+    branches: [Add-test-all-workflow]
+
+ 
+jobs:
+  clientcert:
+    uses: ./.github/workflows/test-clientcert.yml
+    secrets: inherit
+ 
+  cms-signer:
+    uses: ./.github/workflows/test-CMSSigner.yml
+    secrets: inherit
+ 
+  jarchive-signer:
+    uses: ./.github/workflows/test-JArchiveSigner.yml
+    secrets: inherit
+ 
+  pdf-signer:
+    uses: ./.github/workflows/test-PDFSigner.yml
+    secrets: inherit
+ 
+  plain-signer:
+    uses: ./.github/workflows/test-PlainSigner.yml
+    secrets: inherit
+ 
+  curl-fail-flag:
+    uses: ./.github/workflows/test-CurlFailFlag.yml
+    secrets: inherit

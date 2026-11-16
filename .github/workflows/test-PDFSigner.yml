@@ -2,6 +2,7 @@ name: test-PDFSigner
 
 on:
  workflow_dispatch:
+ workflow_call:
  #push:
    #branches: [master]
 
