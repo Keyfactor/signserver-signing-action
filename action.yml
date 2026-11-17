@@ -59,26 +59,26 @@ runs:
       run: |
         if [ "$REST" == "true" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
-            curl --fail --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data'
+            curl --fail --output "${OUTPUT}" --location --request POST "${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process" --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form "file=@${FILE_PATH}" --form 'type=multipart/form-data'
           elif [ "$CLIENT_CERT" != "" ]; then
             if [ "$DISABLE_CERT_VAL" == "true" ]; then
-              curl --fail --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD} --insecure
+              printf -- '--cert "%s:%s"\n' "$CLIENT_CERT" "$PASSWORD" | curl --config - --fail --output "${OUTPUT}" --location --request POST "${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process" --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form "file=@${FILE_PATH}" --form 'type=multipart/form-data' --cert-type P12 --insecure
             elif [ "$DISABLE_CERT_VAL" == "false" ]; then
-              curl --fail --output ${OUTPUT} --location --request POST ${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form file=@${FILE_PATH} --form 'type=multipart/form-data' --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}
+              printf -- '--cert "%s:%s"\n' "$CLIENT_CERT" "$PASSWORD" | curl --config - --fail --output "${OUTPUT}" --location --request POST "${ENDPOINT}/rest/v1/workers/${WORKER_NAME}/process" --header 'X-Keyfactor-Requested-With: REST' --header 'Accept: application/octet-stream' --form "file=@${FILE_PATH}" --form 'type=multipart/form-data' --cert-type P12
             fi
           fi
-          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
+          echo "OUTPUT=${OUTPUT}" >> "$GITHUB_ENV"
         elif [ "$REST" == "false" ]; then
           if [ "$CLIENT_CERT" == "" ]; then
-            curl --fail -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --output ${OUTPUT} ${ENDPOINT}/process
+            curl --fail -F workerName="${WORKER_NAME}" -F "file=@${FILE_PATH}" --output "${OUTPUT}" "${ENDPOINT}/process"
           elif [ "$CLIENT_CERT" != "" ]; then
             if [ "$DISABLE_CERT_VAL" == "true" ]; then
-              curl --fail -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process --insecure
+              printf -- '--cert "%s:%s"\n' "$CLIENT_CERT" "$PASSWORD" | curl --config - --fail -F workerName="${WORKER_NAME}" -F "file=@${FILE_PATH}" --cert-type P12 --output "${OUTPUT}" "${ENDPOINT}/process" --insecure
             elif [ "$DISABLE_CERT_VAL" == "false" ]; then
-              curl --fail -F workerName=${WORKER_NAME} -F file=@${FILE_PATH} --cert-type P12 --cert ${CLIENT_CERT}:${PASSWORD}  --output ${OUTPUT} ${ENDPOINT}/process
+              printf -- '--cert "%s:%s"\n' "$CLIENT_CERT" "$PASSWORD" | curl --config - --fail -F workerName="${WORKER_NAME}" -F "file=@${FILE_PATH}" --cert-type P12 --output "${OUTPUT}" "${ENDPOINT}/process"
             fi
           fi
-          echo "OUTPUT=${OUTPUT}" >> $GITHUB_ENV
+          echo "OUTPUT=${OUTPUT}" >> "$GITHUB_ENV"
         fi
             
     - name: Upload signed file to artifacts
